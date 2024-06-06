@@ -5,7 +5,7 @@ import random
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--labels', type=str, required=True, help='path to json with keypoints val labels')
+    parser.add_argument('--labels', type=str,default='../COCO2017/annotations/person_keypoints_val2017.json',help='path to json with keypoints val labels')
     parser.add_argument('--output-name', type=str, default='val_subset.json',
                         help='name of output file with subset of val labels')
     parser.add_argument('--num-images', type=int, default=250, help='number of images in subset')
