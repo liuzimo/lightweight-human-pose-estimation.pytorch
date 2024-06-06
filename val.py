@@ -162,11 +162,11 @@ def evaluate(labels, output_name, images_folder, net, multiscale=False, visualiz
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--labels', type=str, required=True, help='path to json with keypoints val labels')
+    parser.add_argument('--labels', type=str, default='../COCO2017/annotations/person_keypoints_val2017.json', help='path to json with keypoints val labels')
     parser.add_argument('--output-name', type=str, default='detections.json',
                         help='name of output json file with detected keypoints')
-    parser.add_argument('--images-folder', type=str, required=True, help='path to COCO val images folder')
-    parser.add_argument('--checkpoint-path', type=str, required=True, help='path to the checkpoint')
+    parser.add_argument('--images-folder', type=str, default="../COCO2017/val2017/", help='path to COCO val images folder')
+    parser.add_argument('--checkpoint-path', type=str, default='checkpoint_iter_370000.pth', help='path to the checkpoint')
     parser.add_argument('--multiscale', action='store_true', help='average inference results over multiple scales')
     parser.add_argument('--visualize', action='store_true', help='show keypoints')
     args = parser.parse_args()
