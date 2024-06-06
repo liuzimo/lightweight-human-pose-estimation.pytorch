@@ -73,8 +73,7 @@ def train(prepared_train_labels, train_images_folder, num_refinement_stages, bas
 
     net = DataParallel(net).cuda()
     net.train()
-    for epochId in range(current_epoch, 280):
-        scheduler.step()
+    for epochId in range(current_epoch, 100):
         total_losses = [0, 0] * (num_refinement_stages + 1)  # heatmaps loss, paf loss per stage
         batch_per_iter_idx = 0
         for batch_data in train_loader:
@@ -129,19 +128,19 @@ def train(prepared_train_labels, train_images_folder, num_refinement_stages, bas
                 print('Validation...')
                 evaluate(val_labels, val_output_name, val_images_folder, net)
                 net.train()
+        scheduler.step()
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--prepared-train-labels', type=str, required=True,
-                        help='path to the file with prepared annotations')
-    parser.add_argument('--train-images-folder', type=str, required=True, help='path to COCO train images folder')
+    parser.add_argument('--prepared-train-labels', type=str, default='prepared_train_annotation.pkl', help='path to the file with prepared annotations')
+    parser.add_argument('--train-images-folder', type=str, default="../COCO2017/train2017/", help='path to COCO train images folder')
     parser.add_argument('--num-refinement-stages', type=int, default=1, help='number of refinement stages')
     parser.add_argument('--base-lr', type=float, default=4e-5, help='initial learning rate')
-    parser.add_argument('--batch-size', type=int, default=80, help='batch size')
+    parser.add_argument('--batch-size', type=int, default=32, help='batch size')
     parser.add_argument('--batches-per-iter', type=int, default=1, help='number of batches to accumulate gradient from')
-    parser.add_argument('--num-workers', type=int, default=8, help='number of workers')
-    parser.add_argument('--checkpoint-path', type=str, required=True, help='path to the checkpoint to continue training from')
+    parser.add_argument('--num-workers', type=int, default=4, help='number of workers')
+    parser.add_argument('--checkpoint-path', type=str, default="", help='path to the checkpoint to continue training from')
     parser.add_argument('--from-mobilenet', action='store_true',
                         help='load weights from mobilenet feature extractor')
     parser.add_argument('--weights-only', action='store_true',
@@ -150,8 +149,8 @@ if __name__ == '__main__':
                         help='experiment name to create folder for checkpoints')
     parser.add_argument('--log-after', type=int, default=100, help='number of iterations to print train loss')
 
-    parser.add_argument('--val-labels', type=str, required=True, help='path to json with keypoints val labels')
-    parser.add_argument('--val-images-folder', type=str, required=True, help='path to COCO val images folder')
+    parser.add_argument('--val-labels', type=str, default='val_subset.json', help='path to json with keypoints val labels')
+    parser.add_argument('--val-images-folder', type=str, default="../COCO2017/val2017/", help='path to COCO val images folder')
     parser.add_argument('--val-output-name', type=str, default='detections.json',
                         help='name of output json file with detected keypoints')
     parser.add_argument('--checkpoint-after', type=int, default=5000,
